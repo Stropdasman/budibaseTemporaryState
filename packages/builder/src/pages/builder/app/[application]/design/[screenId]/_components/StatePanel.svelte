@@ -19,7 +19,6 @@
     decodeJSBinding,
     findHBSBlocks,
     isJSBinding,
-    processStringSync,
   } from "@budibase/string-templates"
   import DrawerBindableInput from "@/components/common/bindings/DrawerBindableInput.svelte"
 
@@ -56,7 +55,8 @@
   ) => {
     if (screen && key) {
       searchComponents(screen, key)
-      editorValue = $previewStore.selectedComponentContext?.state?.[key] ?? ""
+      const raw = $previewStore.selectedComponentContext?.state?.[key]
+      editorValue = isJSBinding(raw) ? raw : raw ?? ""
     } else {
       editorValue = ""
       componentsUsingState = []
@@ -225,12 +225,7 @@
     if (!selectedKey || !$previewStore.selectedComponentContext) {
       return
     }
-    const stateUpdate = {
-      [selectedKey]: processStringSync(
-        e.detail,
-        $previewStore.selectedComponentContext
-      ),
-    }
+    const stateUpdate = { [selectedKey]: e.detail }
     previewStore.updateState(stateUpdate)
     editorValue = e.detail
   }
