@@ -19,6 +19,7 @@
     decodeJSBinding,
     findHBSBlocks,
     isJSBinding,
+    encodeJSBinding,
   } from "@budibase/string-templates"
   import DrawerBindableInput from "@/components/common/bindings/DrawerBindableInput.svelte"
 
@@ -55,8 +56,10 @@
   ) => {
     if (screen && key) {
       searchComponents(screen, key)
+
       const raw = $previewStore.selectedComponentContext?.state?.[key]
       editorValue = isJSBinding(raw) ? raw : raw ?? ""
+      console.log("🔵 selectStateKey loading:", key, "value:", editorValue)
     } else {
       editorValue = ""
       componentsUsingState = []
@@ -225,9 +228,21 @@
     if (!selectedKey || !$previewStore.selectedComponentContext) {
       return
     }
-    const stateUpdate = { [selectedKey]: e.detail }
-    previewStore.updateState(stateUpdate)
-    editorValue = e.detail
+
+    const raw = e.detail
+    const encoded = isJSBinding(raw) ? raw : encodeJSBinding(raw)
+
+    console.log("🟡 Updating key:", selectedKey, "with encoded:", encoded)
+
+    // Update previewStore
+    previewStore.updateState({
+      [selectedKey]: encoded,
+    })
+
+    // Update directe componentcontext — nodig voor herladen!
+    previewStore.selectedComponentContext.state[selectedKey] = encoded
+
+    editorValue = raw
   }
 
   onMount(() => {
