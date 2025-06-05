@@ -311,6 +311,10 @@
   #spectrum-root.builder {
     background: transparent;
   }
+  /* Allow selecting disabled components in the builder */
+  :global(#spectrum-root.builder [disabled]) {
+    pointer-events: none;
+  }
 
   #clip-root {
     max-width: 100%;
