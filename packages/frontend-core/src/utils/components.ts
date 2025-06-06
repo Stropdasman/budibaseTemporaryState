@@ -22,5 +22,18 @@ export const getSettingsDefinition = (
       settings.push(setting)
     }
   })
+  if (!settings.some(s => s.key === "visible")) {
+    settings.push({
+      key: "visible",
+      type: "boolean",
+      label: "Visible",
+      defaultValue: true,
+    })
+  }
+  console.log(
+    "getSettingsDefinition",
+    definition.name || definition.type,
+    settings
+  )
   return settings
 }

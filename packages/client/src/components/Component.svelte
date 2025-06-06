@@ -477,12 +477,19 @@
   // Evaluates the list of conditional UI conditions and determines any setting
   // or visibility changes required
   const evaluateConditions = conditions => {
+    let nextVisible = cachedSettings?.visible ?? true
+    console.log("evaluateConditions:start", id, conditions, nextVisible)
     if (!conditions?.length) {
+      visible = nextVisible
+      conditionalSettings = {}
+      console.log("evaluateConditions:done", id, visible)
       return
     }
 
     // Default visible to false if there is a show condition
-    let nextVisible = !conditions.find(condition => condition.action === "show")
+    if (conditions.find(condition => condition.action === "show")) {
+      nextVisible = false
+    }
 
     // Execute conditions and determine settings and visibility changes
     const activeConditions = getActiveConditions(conditions)
@@ -494,6 +501,7 @@
     // Update state from condition results
     conditionalSettings = result.settingUpdates
     visible = nextVisible
+    console.log("evaluateConditions:end", id, visible)
   }
 
   // Combines and caches all settings which will be passed to the component
@@ -504,6 +512,11 @@
     enrichedSettings,
     conditionalSettings
   ) => {
+    console.log("applySettings", id, {
+      staticSettings,
+      enrichedSettings,
+      conditionalSettings,
+    })
     const allSettings = {
       ...staticSettings,
       ...enrichedSettings,
@@ -593,10 +606,13 @@
   const getDataContext = () => {
     const normalContext = get(context)
     const additionalContext = ref?.getAdditionalDataContext?.()
-    return {
+    const ctx = {
       ...normalContext,
       ...additionalContext,
+      visible,
     }
+    console.log("getDataContext", id, ctx)
+    return ctx
   }
 
   const checkGrid = x => {

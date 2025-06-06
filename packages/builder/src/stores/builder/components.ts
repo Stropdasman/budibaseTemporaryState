@@ -34,7 +34,7 @@ import {
   DB_TYPE_EXTERNAL,
 } from "@/constants/backend"
 import { BudiStore } from "../BudiStore"
-import { Utils } from "@budibase/frontend-core"
+import { Utils, getSettingsDefinition } from "@budibase/frontend-core"
 import {
   ComponentDefinition,
   ComponentSetting,
@@ -1274,22 +1274,13 @@ export class ComponentStore extends BudiStore<ComponentState> {
 
   /**
    * Cache component settings
-   */
+  */
   cacheSettings(componentType: string, definition: ComponentDefinition | null) {
     let settings: ComponentSetting[] = []
     if (definition) {
-      settings = definition.settings?.filter(setting => !setting.section) ?? []
-      definition.settings
-        ?.filter(setting => setting.section)
-        .forEach(section => {
-          settings = settings.concat(
-            (section.settings || []).map(setting => ({
-              ...setting,
-              section: section.name,
-            }))
-          )
-        })
+      settings = getSettingsDefinition(definition)
     }
+    console.log("cacheSettings", componentType, settings)
     this.update(state => ({
       ...state,
       settingsCache: {
