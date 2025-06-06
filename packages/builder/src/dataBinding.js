@@ -197,10 +197,11 @@ export const getComponentBindableProperties = (asset, componentId) => {
   // Ensure that the component exists and exposes context
   const component = findComponent(asset.props, componentId)
   const def = componentStore.getDefinition(component?._component)
-  if (!def?.context) {
+  const contexts = getComponentContexts(component?._component)
+  console.log("getComponentBindableProperties", componentId, contexts)
+  if (!contexts?.length) {
     return []
   }
-  const contexts = Array.isArray(def.context) ? def.context : [def.context]
 
   // Get the bindings for the component
   const componentContext = {

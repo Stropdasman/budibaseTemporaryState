@@ -256,6 +256,17 @@ export const getComponentContexts = (component: string) => {
   if (def?.context) {
     contexts = Array.isArray(def.context) ? [...def.context] : [def.context]
   }
+  contexts.push({
+    type: "static",
+    scope: ContextScopes.Local,
+    values: [
+      {
+        label: "Visible",
+        key: "visible",
+        type: "boolean",
+      },
+    ],
+  })
   if (def?.actions) {
     contexts.push({
       type: "action",
@@ -265,6 +276,7 @@ export const getComponentContexts = (component: string) => {
       actions: def.actions.map(x => (typeof x === "string" ? { type: x } : x)),
     })
   }
+  console.log("getComponentContexts", component, contexts)
   return contexts
 }
 
