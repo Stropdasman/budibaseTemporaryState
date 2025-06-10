@@ -48,11 +48,13 @@ export const buildRowActionEndpoints = (
    * @param name the name of the row action
    * @param tableId the ID of the table
    */
-  create: async (tableId, name) => {
+  create: async (tableId, name, hideWhenField?, hideWhenValue?) => {
     return await API.post<CreateRowActionRequest, RowActionResponse>({
       url: `/api/tables/${tableId}/actions`,
       body: {
         name,
+        hideWhenField,
+        hideWhenValue,
       },
     })
   },

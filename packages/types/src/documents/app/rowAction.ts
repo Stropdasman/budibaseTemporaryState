@@ -8,6 +8,8 @@ export interface TableRowActions extends Document {
 export interface RowActionData {
   automationId: string
   permissions: RowActionPermissions
+  hideWhenField?: string
+  hideWhenValue?: string
 }
 
 export interface RowActionPermissions {

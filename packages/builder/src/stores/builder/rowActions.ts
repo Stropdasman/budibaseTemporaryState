@@ -52,7 +52,13 @@ export class RowActionStore extends BudiStore<RowActionState> {
     }))
   }
 
-  createRowAction = async (tableId: string, viewId?: string, name?: string) => {
+  createRowAction = async (
+    tableId: string,
+    viewId?: string,
+    name?: string,
+    hideWhenField?: string,
+    hideWhenValue?: string
+  ) => {
     if (!tableId) {
       return
     }
@@ -70,7 +76,12 @@ export class RowActionStore extends BudiStore<RowActionState> {
     }
 
     // Create the action
-    const res = await API.rowActions.create(tableId, name)
+    const res = await API.rowActions.create(
+      tableId,
+      name,
+      hideWhenField,
+      hideWhenValue
+    )
 
     // Enable action on this view if adding via a view
     if (viewId) {

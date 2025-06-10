@@ -108,9 +108,24 @@ export const getRowActionButtonTemplates = async ({
       })
     }
 
-    return {
+    const result: any = {
       ...button,
       onClick,
     }
+
+    if (action.hideWhenField) {
+      result._conditions = [
+        {
+          id: Helpers.uuid(),
+          operator: "notEqual",
+          action: "show",
+          valueType: "string",
+          referenceValue: action.hideWhenValue,
+          newValue: `{{ [${instance._id}].[${action.hideWhenField}] }}`,
+        },
+      ]
+    }
+
+    return result
   })
 }
