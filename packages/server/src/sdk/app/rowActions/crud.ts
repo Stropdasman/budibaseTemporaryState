@@ -32,8 +32,15 @@ async function ensureUniqueAndThrow(
   }
 }
 
-export async function create(tableId: string, rowAction: { name: string }) {
-  const action = { name: rowAction.name.trim() }
+export async function create(
+  tableId: string,
+  rowAction: { name: string; hideWhenField?: string; hideWhenValue?: string }
+) {
+  const action = {
+    name: rowAction.name.trim(),
+    hideWhenField: rowAction.hideWhenField,
+    hideWhenValue: rowAction.hideWhenValue,
+  }
 
   const db = context.getAppDB()
   const rowActionsId = generateRowActionsID(tableId)
@@ -76,6 +83,8 @@ export async function create(tableId: string, rowAction: { name: string }) {
       table: { runAllowed: true },
       views: {},
     },
+    hideWhenField: action.hideWhenField,
+    hideWhenValue: action.hideWhenValue,
   }
   await db.put(doc)
 

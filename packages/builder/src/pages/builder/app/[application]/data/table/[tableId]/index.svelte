@@ -72,6 +72,10 @@
       .filter(action => action.allowedSources?.includes(id))
       .map(action => ({
         text: action.name,
+        visible: row =>
+          action.hideWhenField
+            ? row[action.hideWhenField] !== action.hideWhenValue
+            : true,
         onClick: async row => {
           await rowActions.trigger(id, action.id, row._id)
           notifications.success("Row action triggered successfully")

@@ -1,5 +1,7 @@
 interface RowActionData {
   name: string
+  hideWhenField?: string
+  hideWhenValue?: string
 }
 interface RowActionPermissionsData {
   allowedSources: string[] | undefined

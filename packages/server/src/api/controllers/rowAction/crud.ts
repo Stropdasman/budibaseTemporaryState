@@ -42,6 +42,8 @@ export async function find(ctx: Ctx<void, RowActionsResponse>) {
           name: automationNames[action.automationId],
           automationId: action.automationId,
           allowedSources: flattenAllowedSources(tableId, action.permissions),
+          hideWhenField: action.hideWhenField,
+          hideWhenValue: action.hideWhenValue,
         },
       }),
       {}
@@ -58,6 +60,8 @@ export async function create(
 
   const createdAction = await sdk.rowActions.create(tableId, {
     name: ctx.request.body.name,
+    hideWhenField: ctx.request.body.hideWhenField,
+    hideWhenValue: ctx.request.body.hideWhenValue,
   })
 
   await events.rowAction.created(createdAction)
@@ -68,6 +72,8 @@ export async function create(
     name: createdAction.name,
     automationId: createdAction.automationId,
     allowedSources: flattenAllowedSources(tableId, createdAction.permissions),
+    hideWhenField: createdAction.hideWhenField,
+    hideWhenValue: createdAction.hideWhenValue,
   }
   ctx.status = 201
 }

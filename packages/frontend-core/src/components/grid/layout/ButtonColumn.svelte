@@ -48,10 +48,12 @@
   }
 
   const makeCollapsedButtons = (buttons, row) => {
-    return buttons.map(button => ({
-      ...button,
-      onClick: () => handleClick(button, row),
-    }))
+    return buttons
+      .filter(button => !button.visible || button.visible(row))
+      .map(button => ({
+        ...button,
+        onClick: () => handleClick(button, row),
+      }))
   }
 
   onMount(() => {
@@ -103,21 +105,23 @@
                 />
               {:else}
                 {#each buttons as button}
-                  <Button
-                    newStyles
-                    size="S"
-                    cta={button.type === "cta"}
-                    primary={button.type === "primary"}
-                    secondary={button.type === "secondary"}
-                    warning={button.type === "warning"}
-                    overBackground={button.type === "overBackground"}
-                    on:click={() => handleClick(button, row)}
-                  >
-                    {#if button.icon}
-                      <i class="{button.icon} S" />
-                    {/if}
-                    {button.text || "Button"}
-                  </Button>
+                  {#if !button.visible || button.visible(row)}
+                    <Button
+                      newStyles
+                      size="S"
+                      cta={button.type === "cta"}
+                      primary={button.type === "primary"}
+                      secondary={button.type === "secondary"}
+                      warning={button.type === "warning"}
+                      overBackground={button.type === "overBackground"}
+                      on:click={() => handleClick(button, row)}
+                    >
+                      {#if button.icon}
+                        <i class="{button.icon} S" />
+                      {/if}
+                      {button.text || "Button"}
+                    </Button>
+                  {/if}
                 {/each}
               {/if}
             </div>
